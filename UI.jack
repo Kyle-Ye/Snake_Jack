@@ -1,0 +1,114 @@
+class UI {
+
+    function void paintWelcome () {
+        do Screen.clearScreen();
+        do UI.paintWall();
+        do Output.moveCursor(2,14);
+        do Output.printString("*******************************");
+        do Output.moveCursor(3,14);
+        do Output.printString("* Welcome to the Snake World! *");
+        do Output.moveCursor(4,14);
+        do Output.printString("*******************************");
+        do Output.moveCursor(6,14);
+        do Output.printString("[P]ause      [Esc] exit");
+        do Output.moveCursor(8,14);
+        do Output.printString("[F1]speed up [F2]speed down ");
+        do Output.moveCursor(12,14);
+        do Output.printString("Press any key to start:");
+        return;
+    }
+    function void paintWall(){
+        var int i;
+        var int location;
+        
+        let location = 0;
+        let i = 0;
+        while(i < 32){
+            do UI.drawWall(location);
+            let location = location + 1;
+            let i = i+1;
+        }
+        let location = 7680; // 7680=32*240
+        let i = 0;
+        while(i < 32){
+            do UI.drawWall(location);
+            let location = location + 1;
+            let i = i+1;
+        }
+        let location = 512;
+        let i = 0;
+        while(i < 14){
+            do UI.drawWall(location);
+            let location = location + 512;// 512=32*16
+            let i = i+1;
+        }
+        let location = 543; // 543=512+31
+        let i = 0;
+        while(i < 14){
+            do UI.drawWall(location);
+            let location = location + 512;// 512=32*16
+            let i = i+1;
+        }
+        return;
+    }
+    function void paintExit(String s){
+        do Screen.clearScreen();
+        do UI.paintWall();
+        do Output.moveCursor(5,12);
+        do Output.printString(s);
+        return;
+    }
+    function void drawNode(Node node,String symbol){
+        do Output.moveCursor(node.getX(),node.getY());
+        do Output.printString(symbol);
+        return;
+    }
+    function void drawFood(Food food,String symbol){
+        do Output.moveCursor(food.getX(),food.getY());
+        do Output.printString(symbol);
+        return;
+    }
+    function void drawHeart(int location){
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 14364);
+        do Memory.poke(memAddress+128, 31806);
+        do Memory.poke(memAddress+160, 32382);
+        do Memory.poke(memAddress+192, 32766);
+        do Memory.poke(memAddress+224, 32766);
+        do Memory.poke(memAddress+256, 16380);
+        do Memory.poke(memAddress+288, 8184);
+        do Memory.poke(memAddress+320, 4080);
+        do Memory.poke(memAddress+352, 2016);
+        do Memory.poke(memAddress+384, 960);
+        do Memory.poke(memAddress+416, 384);
+        do Memory.poke(memAddress+448, 0);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    function void drawWall(int location){
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+0, -21846);
+        do Memory.poke(memAddress+32, 21845);
+        do Memory.poke(memAddress+64, -21846);
+        do Memory.poke(memAddress+96, 21845);
+        do Memory.poke(memAddress+128, -21846);
+        do Memory.poke(memAddress+160, 21845);
+        do Memory.poke(memAddress+192, -21846);
+        do Memory.poke(memAddress+224, 21845);
+        do Memory.poke(memAddress+256, -21846);
+        do Memory.poke(memAddress+288, 21845);
+        do Memory.poke(memAddress+320, -21846);
+        do Memory.poke(memAddress+352, 21845);
+        do Memory.poke(memAddress+384, -21846);
+        do Memory.poke(memAddress+416, 21845);
+        do Memory.poke(memAddress+448, -21846);
+        do Memory.poke(memAddress+480, 21845);
+        return; 
+    }
+}

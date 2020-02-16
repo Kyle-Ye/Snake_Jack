@@ -1,0 +1,25 @@
+class Food {
+    field int x;
+    field int y;
+    constructor Food new(){
+        return this;
+    }
+    method int getX(){
+        return x;
+    }
+    method int getY(){
+        return y;
+    }
+    method void setX(int mx){
+        let x = mx;
+        return;
+    }
+    method void setY(int my){
+        let y = my;
+        return;
+    }
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+}

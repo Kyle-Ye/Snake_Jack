@@ -1,0 +1,17 @@
+class Random {
+    static int counter;
+
+    // [from,to)
+    function int getInt (int from,int to) {
+        // Use SP value as random seed
+        var int sp;
+
+        let counter = counter + 1;
+
+        let sp = Memory.peek(0);
+        return Random.mod(sp+counter,to-from)+from;
+    }
+    function int mod (int x,int y) {
+        return x-(y*(x/y));
+    }
+}

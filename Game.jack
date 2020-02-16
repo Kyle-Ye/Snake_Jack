@@ -1,0 +1,124 @@
+class Game {
+    static boolean exit;
+    static boolean pause;
+    static int direction;
+    static Snake snake;
+    static Food food;
+    field int sleeptime;
+    constructor Game new(){
+        let sleeptime = 100;
+        return this;
+    }
+
+    // The running main loop
+    method void run(){
+        var char key;  // the key currently pressed by the user
+        var int direction;
+
+        // wait the user to start the game
+        do welcome();
+        while(key = 0){
+            let key = Keyboard.keyPressed();
+        }
+        do init();
+
+        while (~exit) {
+            if (pause) {
+                while(key = 0){
+                    let key = Keyboard.keyPressed();
+                }
+                if (key = 80)  { let pause = false; } // p key
+                while (~(key = 0)) {
+                    let key = Keyboard.keyPressed();
+                 }
+            }
+            // waits for a key to be pressed
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                do snake.move(direction);
+                do Sys.wait(sleeptime);  // delays the next movement
+            }
+            if (key = 81)  { let exit = true; }       // q key
+            if (key = 80)  { let pause = true; }       // p key
+            if (key = 90)  { 
+                if(sleeptime>50)
+                {
+                    let sleeptime=sleeptime-50;
+                } 
+            }   // z key
+            if (key = 88)  { 
+                if(sleeptime<250)
+                {
+                    let sleeptime=sleeptime+50;
+                } 
+            } // x key
+            if ((key = 131)&(~(direction=2))) { let direction = 1; }     // up arrow
+            if ((key = 133)&(~(direction=1))) { let direction = 2; }     // down arrow
+            if ((key = 130)&(~(direction=4))) { let direction = 3; }     // left arrow
+            if ((key = 132)&(~(direction=3))) { let direction = 4; }     // right arrow
+
+            // waits for the key to be released
+            while (~(key = 0)) {
+               let key = Keyboard.keyPressed();
+               do snake.move(direction);
+               do Sys.wait(sleeptime);  // delays the next movement
+            }
+        }
+        return;
+    }
+    method void dispose(){
+        do snake.dispose();
+        do food.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+    method void welcome () {
+        do UI.paintWelcome();
+        return;
+    }
+    method void init (){
+        do Screen.clearScreen();
+        do UI.paintWall();
+        let exit = false;
+        let pause = false;
+        let direction = 0;
+        let snake = Snake.new(8);
+        let food = Food.new();
+        do Game.createFood();
+        return;
+    }
+    function boolean getExit () {
+        return exit;
+    }
+    function void setExit (boolean mExit) {
+        let exit = mExit;
+        return;
+    }
+    function void createFood () {
+        var Node temp;
+        var Node head;
+        var int mx;
+        var int my;
+        
+        let head = snake.getHead();
+        let temp = head;
+        let mx = Random.getInt(2,21);
+        let my = Random.getInt(2,62);
+        while(~(temp=null)){
+            while((temp.getX()=mx)&(temp.getY()=my)){
+                let temp = head;
+                let mx = Random.getInt(2,21);
+                let my = Random.getInt(2,62);
+            }
+            let temp = temp.getNext();
+        }
+
+        do food.setX(mx);
+        do food.setY(my);
+        do UI.drawFood(food,"$");
+        return;
+    }
+    function Food getFood () {
+        return food;
+    }
+}

@@ -1,0 +1,118 @@
+class Snake {
+    field int length;
+    field Node head;
+    field Node tail;
+    field Node nexthead;
+    field Node inde;
+    constructor Snake new(int initLength){
+        var int i;
+        let length = initLength;
+
+        let tail = Node.new(12,8);
+        do tail.setNext(null);
+
+        let i = 1;
+        while(i<length){
+            let head = Node.new(12,8+i);
+            do head.setNext(tail);
+            do tail.setPrev(head);
+            let tail = head;
+            let i = i+1;
+        }
+        while(~(tail.getNext()=null)){
+            do UI.drawNode(tail,"*");
+            let tail = tail.getNext();
+        }
+        do Output.moveCursor(tail.getX(),tail.getY());
+        do Output.printString("*");
+        return this;
+    }
+
+    method void move(int direction){
+        if (direction = 0 | Game.getExit()) { return; }
+        if (direction = 1) { let nexthead = Node.new(head.getX()-1,head.getY());}
+        if (direction = 2) { let nexthead = Node.new(head.getX()+1,head.getY());}
+        if (direction = 3) { let nexthead = Node.new(head.getX(),head.getY()-1);}
+        if (direction = 4) { let nexthead = Node.new(head.getX(),head.getY()+1);}
+        
+        if (isGotFood()){
+            do funFood();
+        }else{
+            do funMove();
+            do biteSelf();
+            do biteWall();
+        }
+        return;
+    }
+
+    method void funMove(){
+        do funTail();
+        do funHead();
+        return;
+    }
+    // Add a new head;
+    method void funHead()
+    {
+        do head.setPrev(nexthead);
+        do nexthead.setNext(head);
+        let head = nexthead;
+        do UI.drawNode(head,"*");
+        return;
+    }
+    // Drop old tail;
+    method void funTail()
+    {
+        var Node temp;
+        do UI.drawNode(tail," ");
+        let temp = tail;
+        let tail = tail.getPrev();
+        do temp.dispose();
+        do tail.setNext(null);
+        return;
+    }
+    method void funFood()
+    {
+        do funHead();
+        do Game.createFood();
+        return;
+    }
+
+    method void biteSelf(){
+        var Node temp;
+        let temp = head.getNext();
+        while(~(temp=null)){
+            if((head.getX()=temp.getX())&(head.getY()=temp.getY())){
+                do UI.paintExit("Fail! You bit yourself!");
+                do Game.setExit(true);
+            }
+            let temp = temp.getNext();
+        }
+        return;
+    }
+    method void biteWall(){
+        var int x;
+        var int y;
+        let x = head.getX();
+        let y = head.getY();
+        if ((x>20)|(x<2)|(y>61)|(y<2)){
+            do UI.paintExit("Fail! You hit the wall!");
+            do Game.setExit(true);
+        }
+        return;
+    }
+    method boolean isGotFood(){
+        var Food food;
+        let food = Game.getFood();
+        if((nexthead.getX()=food.getX())&(nexthead.getY()=food.getY())){
+            return true;
+        }
+        return false;
+    }
+    method boolean getHead(){
+        return head;
+    }
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+}
